@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <v-alert
         class="alert"
         type="success"
@@ -8,6 +9,17 @@
         transition="scroll-y-transition"
     >
       测试创建成功！
+      <v-divider
+          class="my-4 info"
+          style="opacity: 0.22"
+          color="success"
+      ></v-divider>
+      <v-row class="ma-2">
+        <v-btn color="success" class="ma-2" outlined @click="returnFa">返回</v-btn>
+
+        <v-btn color="primary" class="ma-2" outlined @click="continueCreate">继续</v-btn>
+      </v-row>
+
     </v-alert>
     <!-- alert -->
     <v-alert
@@ -265,9 +277,9 @@
         ></question-item>
       </v-row>
       <div class="text-center">
-        <v-pagination
+        <v-pagination class="mt-6"
             v-model="page"
-            :length="6"
+            :length="2"
         ></v-pagination>
       </div>
     </v-container>
@@ -362,6 +374,14 @@ export default Vue.extend( {
 
   },
   methods: {
+
+    continueCreate(){
+      this.showSuccessDialog = false;
+    },
+    returnFa(){
+      this.showSuccessDialog = false;
+      this.$router.go(-1)
+    },
 
     checkDateFormat(){
       //检查日期格式，保证写入数据的正确性
@@ -472,9 +492,10 @@ export default Vue.extend( {
                   })
                 }
                 this.showSuccessDialog = true;
-                setTimeout(() => {
-                  this.showSuccessDialog = false;
-                }, 1000);
+                // setTimeout(() => {
+                //   this.showSuccessDialog = false;
+                // }, 1000);
+
               } else {
                 this.showFailDialog = true;
                 this.msg = res.msg;
@@ -524,5 +545,6 @@ export default Vue.extend( {
   left: 50%;
   top: 200px;
   z-index: 999;
+  width: 300px;
 }
 </style>

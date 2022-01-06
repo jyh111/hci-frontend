@@ -7,7 +7,18 @@
         v-show="showSuccessDialog"
         transition="scroll-y-transition"
     >
+
       习题创建成功！
+      <v-divider
+          class="my-4 info"
+          style="opacity: 0.22"
+          color="success"
+      ></v-divider>
+      <v-row class="ma-2">
+        <v-btn color="success" class="ma-2" outlined @click="returnFa">返回</v-btn>
+
+        <v-btn color="primary" class="ma-2" outlined @click="continueCreate">继续</v-btn>
+      </v-row>
     </v-alert>
     <!-- alert -->
     <v-alert
@@ -174,6 +185,13 @@ export default Vue.extend({
 
   },
   methods:{
+    continueCreate(){
+      this.showSuccessDialog = false;
+    },
+    returnFa(){
+      this.showSuccessDialog = false;
+      this.$router.go(-1)
+    },
     fillAnswer(){
       if(this.quesInfo.type==="单选" && this.quesInfo.answer.length>1) {
         this.showFailDialog = true;
@@ -306,9 +324,9 @@ export default Vue.extend({
             console.log(res);
             if (res.code === 1) {
               this.showSuccessDialog = true;
-              setTimeout(() => {
-                this.showSuccessDialog = false;
-              }, 1000);
+              // setTimeout(() => {
+              //   this.showSuccessDialog = false;
+              // }, 1000);
             } else {
               this.showFailDialog = true;
               this.msg = res.msg;
@@ -371,5 +389,6 @@ export default Vue.extend({
   left: 50%;
   top: 200px;
   z-index: 999;
+  width: 300px;
 }
 </style>
