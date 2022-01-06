@@ -30,26 +30,73 @@
             label="所属课程"
             @change="setCourseId"
         ></v-select>
-        <v-select
-          :items="types"
-          v-model="quesInfo.type"
-          label="题目类型">
-        </v-select>
-        <v-textarea
-            v-model="tempContent"
-            label="题干信息"
-            placeholder="选择题输入选项前请换行"
-        ></v-textarea>
+        <v-row>
+          <v-col>
+            <v-select
+                :items="types"
+                v-model="quesInfo.type"
+                label="题目类型"
+                @change="modeChange">
+            </v-select>
+          </v-col>
+          <v-col>
+            <v-select
+                v-if="quesInfo.type =='单选'|| quesInfo.type=='多选'"
+                :items="sNumber"
+                v-model="tempNumber"
+                label="选项数量"
+                @change="initOption"
+            >
+            </v-select>
+          </v-col>
+        </v-row>
 
-        <v-text-field
-            v-model="quesInfo.answer"
-            label="答案"
-            placeholder="请区分大小写"
-        ></v-text-field>
-        <v-textarea v-model="quesInfo.analysis" label="题目解析"></v-textarea>
+        <v-card class="pa-6" >
+          <v-textarea
+              v-model="tempContent"
+              label="题干信息"
+              placeholder=""
+              clearable
+          ></v-textarea>
+          <div v-if="quesInfo.type =='单选'|| quesInfo.type=='多选'">
+            <v-form id="select-card" v-for="op in option" :key="op.option">
+
+              <v-text-field placeholder="请输入选项内容"
+                            clearable
+                            color="deep-purple"
+                            v-bind:prefix="op.option"
+                            :append-icon="op.isSelected?'mdi-checkbox-marked-circle':'mdi-checkbox-blank-circle-outline'"
+                            @click:append="setSelected(op.option)"
+                            v-model="op.content"
+              >
+
+              </v-text-field>
+            </v-form>
+
+          </div>
+
+          <v-text-field
+              clearable
+              v-model="quesInfo.answer"
+              label="答案"
+              placeholder="请区分大小写"
+              @change="fillAnswer"
+          ></v-text-field>
+          <v-textarea clearable v-model="quesInfo.analysis" label="题目解析"></v-textarea>
+          <v-combobox
+              v-model="labels"
+              label="添加标签"
+              multiple
+              chips
+              color="indigo"
+          ></v-combobox>
+
+        </v-card>
+
         <v-btn class="ml-0 mt-8 " color="indigo" outlined @click="submit">
           确认
         </v-btn>
+
       </form>
 
 
@@ -81,8 +128,9 @@
 <script>
 import { getTeacherCourses} from "@/api/course";
 import {createQuestion} from "@/api/question";
+import Vue from "vue";
 
-export default {
+export default Vue.extend({
   name: "QuestionCreate",//创建问题页面
   data() {
     return {
@@ -94,16 +142,21 @@ export default {
         answer:null,
         teacherId:null,
       },
+      optStr:"ABCDEFGHIJKLMN",
       tempContent:null,
       courseName:this.$route.query.courseName.length>0? this.$route.query.courseName:null,
       types: ["单选", "多选","填空"],
+      sNumber:[3,4,5,6,7],
+      tempNumber:null,
       option:[],
       courseNameLists:[],
       courseList:[],
       dialog: false,
       showSuccessDialog: false,
       showFailDialog: false,
-      msg: ""
+      msg: "",
+      isSelected:false,
+      labels:["必考","软件工程","期末","单元测试",]
     };
   },
   mounted() {
@@ -117,19 +170,96 @@ export default {
           this.courseList.push({"name":res[i].name,"id":res[i].id})
         }
       });
-
     }
 
   },
   methods:{
-    contentProcess(){
-      if(this.quesInfo.type!=="填空"){
-        //单选题格式化 questionBody #~# option1 #~#option2...
-        this.quesInfo.content=this.tempContent.replaceAll('\n',"#~#");
-        console.log(this.quesInfo.content);
-      }else{
-        this.quesInfo.content=this.tempContent;
+    fillAnswer(){
+      if(this.quesInfo.type==="单选" && this.quesInfo.answer.length>1) {
+        this.showFailDialog = true;
+        this.msg = "单选题答案选项不能超过一个";
+        setTimeout(() => {
+          this.showFailDialog = false;
+        }, 1000);
+        return;
+      }else if(this.quesInfo.type==="多选" && this.quesInfo.answer.length===1){
+        this.showFailDialog = true;
+        this.msg = "多选题答案选项仅设置了一个";
+        setTimeout(() => {
+          this.showFailDialog = false;
+        }, 1000);
+        return;
       }
+      var str = this.quesInfo.answer;
+      for(let i = 0; i < this.tempNumber; i++){
+        if(str.indexOf(this.option[i].option)!==-1){
+          console.log("yes")
+          this.option[i].isSelected=true;
+        }else{
+          console.log("no")
+          this.option[i].isSelected=false;
+        }
+      }
+    },
+    modeChange(){
+      if(this.quesInfo.type==='单选'){
+        this.quesInfo.answer="";
+        for(let i = 0; i < this.tempNumber ;i++){
+          this.option[i].isSelected=false;
+        }
+      }
+    },
+    initOption(){
+
+      this.option=[];
+      for(let i=0;i<this.tempNumber;i++){
+        this.option.push({"option":this.optStr[i],"content":"","isSelected":false})
+      }
+      console.log(this.option)
+    },
+    setSelected(option){
+      console.log(option)
+      this.quesInfo.answer="";
+      if(this.quesInfo.type==="单选"){
+        for(let i = 0; i < this.tempNumber; i++){
+          if(this.option[i].option === option){
+            if(this.option[i].isSelected===false){
+              this.option[i].isSelected=true;
+            }else{
+              this.option[i].isSelected=false;
+            }
+          }
+          else{
+            if(this.option[i].isSelected===true){
+              this.option[i].isSelected=false;
+            }
+          }
+        }
+        this.quesInfo.answer=option;
+      }else{
+        for(let i = 0; i < this.tempNumber; i++){
+          if(this.option[i].option === option){
+            this.option[i].isSelected=!this.option[i].isSelected;
+          }
+          if(this.option[i].isSelected===true){
+            this.quesInfo.answer=this.quesInfo.answer+this.option[i].option
+          }
+        }
+      }
+
+      console.log(this.option)
+    },
+    contentProcess(){
+      if(this.quesInfo.type==="填空"){
+        this.quesInfo.content=this.tempContent;
+        return;
+      }
+      console.log(this.option)
+      var str = this.tempContent+"#~#";
+      for(let i = 0 ;i < this.tempNumber ;i++){
+        str = str+this.option[i].option+'.'+this.option[i].content+"#~#";
+      }
+      this.quesInfo.content=str;
     },
     setCourseId(){
       //获取课程id，用于创建题目
@@ -143,6 +273,9 @@ export default {
     submit() {
       this.setCourseId();
       this.contentProcess();
+      if(this.quesInfo.analysis==="" || this.quesInfo.analysis===null){
+        this.quesInfo.analysis="暂无";
+      }
       console.log("I'm submiting")
       if(this.quesInfo.content===null || this.quesInfo.content===""||
       this.quesInfo.courseId===null||
@@ -228,7 +361,7 @@ export default {
 
   },
 
-}
+})
 
 </script>
 

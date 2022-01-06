@@ -35,27 +35,213 @@
             v-model="testInfo.testName"
             label="标题"
         ></v-text-field>
-        <v-text-field
-            v-model="formatStartTime"
-            label="起始时间"
-            placeholder="格式如 2020-06-18 20：00：00"
-        ></v-text-field>
-        <v-text-field
-            v-model="formatEndTime"
-            label="截止时间"
-            placeholder="格式如 2020-06-18 20：00：00"
-        ></v-text-field>
-        <v-select
-            :items="testFormatLength"
-            v-model="testLength"
-            label="题目数量"
-        ></v-select>
-        <v-text-field
-            disabled label="题目列表"
-            :value="selectedQuesId"
-            v-model="selectedQuesId"
-        ></v-text-field>
+        <v-row>
+          <v-col>
+            <v-menu
+                ref="menu"
+                v-model="menu"
+                :close-on-content-click="false"
+                :return-value.sync="dateTime1"
+                transition="scale-transition"
+                offset-y
+                min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                    v-model="dateTime1"
+                    label="起始日期"
+                    prepend-icon="mdi-calendar"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                  v-model="dateTime1"
+                  no-title
+                  scrollable
 
+              >
+                <v-spacer></v-spacer>
+                <v-btn
+                    text
+                    color="primary"
+                    @click="menu = false"
+                >
+                  Cancel
+                </v-btn>
+                <v-btn
+                    text
+                    color="primary"
+                    @click="$refs.menu.save(dateTime1)"
+                >
+                  OK
+                </v-btn>
+              </v-date-picker>
+            </v-menu>
+          </v-col>
+          <v-col>
+            <v-menu
+                ref="menu2"
+                v-model="menu2"
+                :close-on-content-click="false"
+                :nudge-right="40"
+                :return-value.sync="secTime1"
+                transition="scale-transition"
+                offset-y
+                max-width="290px"
+                min-width="290px"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                    v-model="secTime1"
+                    label="起始时间"
+                    prepend-icon="mdi-clock-time-four-outline"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                ></v-text-field>
+              </template>
+              <v-time-picker
+                  v-if="menu2"
+                  use-seconds
+                  format="24hr"
+                  v-model="secTime1"
+                  full-width
+                  @click:seconds="$refs.menu2.save(secTime1)"
+              >
+                <v-spacer></v-spacer>
+                <v-btn
+                    text
+                    color="primary"
+                    @click="menu2 = false"
+                >
+                  Cancel
+                </v-btn>
+                <v-btn
+                    text
+                    color="primary"
+                    @click="$refs.menu2.save(secTime1)"
+                >
+                  OK
+                </v-btn>
+              </v-time-picker>
+            </v-menu>
+          </v-col>
+          <v-spacer></v-spacer>
+        </v-row>
+        <v-row>
+          <v-col >
+            <v-menu
+                ref="menu3"
+                v-model="menu3"
+                :close-on-content-click="false"
+                :return-value.sync="dateTime2"
+                transition="scale-transition"
+                offset-y
+                min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                    v-model="dateTime2"
+                    label="截止日期"
+                    prepend-icon="mdi-calendar"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                  v-model="dateTime2"
+                  no-title
+                  scrollable
+
+              >
+                <v-spacer></v-spacer>
+                <v-btn
+                    text
+                    color="primary"
+                    @click="menu3 = false"
+                >
+                  Cancel
+                </v-btn>
+                <v-btn
+                    text
+                    color="primary"
+                    @click="$refs.menu3.save(dateTime2)"
+                >
+                  OK
+                </v-btn>
+              </v-date-picker>
+            </v-menu>
+          </v-col>
+          <v-col>
+            <v-menu
+                ref="menu4"
+                v-model="menu4"
+                :close-on-content-click="false"
+                :nudge-right="40"
+                :return-value.sync="secTime2"
+                transition="scale-transition"
+                offset-y
+                max-width="290px"
+                min-width="290px"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                    v-model="secTime2"
+                    label="截止时间"
+                    prepend-icon="mdi-clock-time-four-outline"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                ></v-text-field>
+              </template>
+              <v-time-picker
+                  v-if="menu4"
+                  use-seconds
+                  format="24hr"
+                  v-model="secTime2"
+                  full-width
+                  @click:seconds="$refs.menu4.save(secTime2)"
+              >
+                <v-spacer></v-spacer>
+                <v-btn
+                    text
+                    color="primary"
+                    @click="menu4 = false"
+                >
+                  Cancel
+                </v-btn>
+                <v-btn
+                    text
+                    color="primary"
+                    @click="$refs.menu4.save(secTime2)"
+                >
+                  OK
+                </v-btn>
+              </v-time-picker>
+            </v-menu>
+          </v-col>
+          <v-spacer></v-spacer>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-select
+                :items="testFormatLength"
+                v-model="testLength"
+                label="题目数量"
+            ></v-select>
+          </v-col>
+          <v-col>
+            <v-text-field
+                disabled label="题目列表"
+                :value="selectedQuesId"
+                v-model="selectedQuesId"
+            ></v-text-field>
+          </v-col>
+          <v-spacer></v-spacer>
+        </v-row>
         <v-btn class="ml-0 mt-8 " @click="submit" color="indigo" dark>
           确认
         </v-btn>
@@ -63,7 +249,7 @@
       <v-toolbar color="deep-purple lighten-2" dark class="mt-10 mb-10">
         <v-toolbar-title>选择题目 ( {{ selectedQuesId.length }} / {{testLength}} ) 已选{{selectedQuesId.length}}</v-toolbar-title>
       </v-toolbar>
-      <v-row v-for="(ques,index) in questionList" :key="index+1">
+      <v-row  v-for="(ques,index) in questionList" :key="index+1">
         <v-checkbox :label="(index+1)+''" :value="ques.id" class="ml-10 mt-4" color="indigo" v-model="selectedQuesId" @change="checkLength"></v-checkbox>
         <question-item
             :key="ques.id"
@@ -78,6 +264,12 @@
 
         ></question-item>
       </v-row>
+      <div class="text-center">
+        <v-pagination
+            v-model="page"
+            :length="6"
+        ></v-pagination>
+      </div>
     </v-container>
 
     <!-- 提示对话框 -->
@@ -138,12 +330,20 @@ export default Vue.extend( {
       formatStartTime:null,
       formatEndTime:null,
       tests:[],
-      testLists:[1,2,3],
       dialog: false,
       showSuccessDialog: false,
       showFailDialog: false,
       msg: "",
-      questionList:[]
+      questionList:[],
+      dateTime1:null,
+      dateTime2:null,
+      secTime2:null,
+      secTime1:null,
+      menu4:false,
+      menu3:false,
+      menu2:false,
+      menu:false,
+      page:null
     };
   },
   mounted() {
@@ -162,8 +362,11 @@ export default Vue.extend( {
 
   },
   methods: {
+
     checkDateFormat(){
       //检查日期格式，保证写入数据的正确性
+      this.formatStartTime = this.dateTime1+" "+this.secTime1;
+      this.formatEndTime = this.dateTime2+" "+this.secTime2;
       var reDateTime = /^(?:19|20)[0-9][0-9]-(?:(?:0[1-9])|(?:1[0-2]))-(?:(?:[0-2][1-9])|(?:[1-3][0-1])) (?:(?:[0-2][0-3])|(?:[0-1][0-9])):[0-5][0-9]:[0-5][0-9]$/;
       var isStartTime = reDateTime.test(this.formatStartTime);
       var isEndTime=reDateTime.test(this.formatEndTime);

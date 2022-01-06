@@ -4,6 +4,7 @@
       <v-chip dark class="ma-4" color="indigo">{{type}}</v-chip>
       {{quesBody}}
     </v-card-text>
+
     <div v-if="isSelect" style="margin-top: 0">
       <form v-for="btn in btnGroup" :key="btn.option" class="mt-2 mb-2 ml-6 pa-2">
         <v-btn

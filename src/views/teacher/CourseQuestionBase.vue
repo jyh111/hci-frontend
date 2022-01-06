@@ -1,14 +1,16 @@
 <template>
   <v-container class="pl-16 pr-16">
     <v-toolbar color="deep-purple lighten-2" dark class="mt-10 mb-10">
+
+      <v-toolbar-title>{{courseName}} [ {{this.questionList.length}} 题 ]</v-toolbar-title>
       <router-link :to="{path:`/teacher/createQuestion`,query:{courseName:courseName}}">
-        <v-btn  depressed class="ml-4 mr-4" fab dark color="orange" small >
+        <v-btn  left depressed class="ml-4 mr-4" rounded dark color="orange" small >
           <v-icon dark>
             mdi-plus
           </v-icon>
+          添加题目
         </v-btn>
       </router-link>
-      <v-toolbar-title>{{courseName}} [ {{this.questionList.length}} 题 ]</v-toolbar-title>
     </v-toolbar>
     <v-row v-for="ques in questionList" :key="ques.id">
       <question-item
