@@ -46,12 +46,15 @@
           <div class="avatar">
             <el-avatar :size="100" src="/default_avatar.png"></el-avatar>
           </div>
-          <div style="height: 100px;">
-            <div class="btn">
+          <div style="height: 120px;">
+            <div class="btn1">
               <el-button type="primary" plain @click="myCourse"
                 >我的课程</el-button
               >
             </div>
+			<div class="btn2">
+				<el-button type="success" plain @click="myTest">我的测试</el-button>
+			</div>
           </div>
         </el-col>
 
@@ -64,15 +67,21 @@
             {{ userInfo.username
             }}{{ userInfo.userRole == "STUDENT" ? "同学" : "老师" }}, 您好
           </div>
-          <div class="avatar">
+          <div class="avatar" style="height: 120px; padding-top: 0px;">
             <el-avatar :size="100" src="/default_avatar.png"></el-avatar>
           </div>
-          <div style="height: 100px;">
+          <div style="height: 170px;">
             <div class="btn1">
               <el-button type="primary" plain @click="myCourse"
                 >我的课程</el-button
               >
             </div>
+            <div class="btn2" style="height: 50px;">
+              <el-button type="success" plain @click="myTest"
+                >我的测试</el-button
+              >
+            </div>
+        
             <div class="btn2">
               <el-button plain @click="courseManage">课程管理</el-button>
             </div>
@@ -153,6 +162,14 @@
           我的已购课程
         </v-chip>
       </v-row>
+	  <v-row v-if="boughtCoursesList.length == 0">
+	    <v-col
+	      cols="12"
+	      style="font-size: 20px; text-align: center; line-height: 100%;"
+	    >
+	      您还未选购任何课程哦！
+	    </v-col>
+	  </v-row>
       <v-row>
         <course-item
           cols="12"
@@ -187,6 +204,14 @@
           我的测试
         </v-chip>
       </v-row>
+	  <v-row v-if="testList.length == 0">
+	    <v-col
+	      cols="12"
+	      style="font-size: 20px; text-align: center; line-height: 100%;"
+	    >
+	      您还没有任何测试哦！
+	    </v-col>
+	  </v-row>
       <v-row>
         <test-item
           v-for="test in testList"
@@ -577,7 +602,9 @@ export default {
     myCourse() {
       this.$router.push("/myCourse");
     },
-
+	myTest(){
+		this.$router.push("/myTest");
+	},
     courseManage() {
       this.$router.push("/teacher");
     }

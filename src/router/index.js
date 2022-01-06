@@ -24,6 +24,7 @@ import Login from "@/views/Login.vue";
 import Register from "@/views/Register.vue";
 import Search from "@/views/Search.vue";
 import MyCourse from "@/views/MyCourse.vue";
+import MyTest from "@/views/MyTest.vue";
 // import Home from "@/views/Home.vue";
 import Home2 from "@/views/Home2.vue";
 // authentication
@@ -66,6 +67,11 @@ const routes = [
         path: "myCourse",
         name: "MyCourse",
         component: MyCourse
+      },
+      {
+        path: "myTest",
+        name: "MyTest",
+        component: MyTest
       }
     ]
   },
