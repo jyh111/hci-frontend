@@ -68,7 +68,10 @@
       </v-row>
       <el-row style="width: 100%; margin-top: 10px;" v-if="!courseInfo.bought">
         <div>
-          <el-button type="primary" style="float: right;" @click="showDialog"
+          <el-button
+            type="primary"
+            style="float: right;"
+            @click="showDialog(courseInfo.id, courseInfo.name, courseInfo.cost)"
             >购买课程</el-button
           >
         </div>
@@ -282,14 +285,17 @@ export default {
   methods: {
     loadCourse() {
       const { courseId } = this.$route.params;
+      console.log("uid", this.uid);
       getCourseById({
         uid: this.uid,
         courseId: courseId
       }).then(res => {
         this.courseInfo = res;
+        console.log(res);
       });
     },
     showDialog(courseId, courseName, coursePrice) {
+      console.log(courseId, courseName, coursePrice);
       this.currentCourseId = courseId;
       this.currentCourseName = courseName;
       this.currentCoursePrice = coursePrice;
@@ -351,6 +357,7 @@ export default {
         this.snackBarColor = "success";
         this.snackBarMsg = res.msg;
         this.showSnackBar = true;
+        location.reload();
       });
     },
     leaveSettlement() {
@@ -369,10 +376,12 @@ export default {
   },
 
   mounted() {
-    this.loadCourse();
+    console.log(window.localStorage.getItem("userId"));
     if (window.localStorage.getItem("userId") != null) {
       this.uid = window.localStorage.getItem("userId");
     }
+    this.loadCourse();
+    console.log(this.uid);
   }
 };
 </script>

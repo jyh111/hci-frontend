@@ -65,10 +65,15 @@
           <div class="avatar">
             <el-avatar :size="100" src="/default_avatar.png"></el-avatar>
           </div>
-          <div style="height: 100px;">
-            <div class="btn">
+          <div style="height: 120px;">
+            <div class="btn1">
               <el-button type="primary" plain @click="myCourse"
                 >我的课程</el-button
+              >
+            </div>
+            <div class="btn2">
+              <el-button type="success" plain @click="myTest"
+                >我的测试</el-button
               >
             </div>
           </div>
@@ -83,15 +88,21 @@
             {{ userInfo.username
             }}{{ userInfo.userRole == "STUDENT" ? "同学" : "老师" }}, 您好
           </div>
-          <div class="avatar">
+          <div class="avatar" style="height: 120px; padding-top: 0px;">
             <el-avatar :size="100" src="/default_avatar.png"></el-avatar>
           </div>
-          <div style="height: 100px;">
+          <div style="height: 170px;">
             <div class="btn1">
               <el-button type="primary" plain @click="myCourse"
                 >我的课程</el-button
               >
             </div>
+            <div class="btn2" style="height: 50px;">
+              <el-button type="success" plain @click="myTest"
+                >我的测试</el-button
+              >
+            </div>
+
             <div class="btn2">
               <el-button plain @click="courseManage">课程管理</el-button>
             </div>
@@ -286,6 +297,9 @@ export default {
       this.$router.push("/myCourse");
     },
 
+    myTest() {
+      this.$router.push("/myTest");
+    },
     courseManage() {
       this.$router.push("/teacher");
     },

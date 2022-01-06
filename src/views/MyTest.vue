@@ -10,50 +10,43 @@
         <v-icon left>
           mdi-label
         </v-icon>
-        我的课程
+        我的测试
       </v-chip>
     </v-row>
-    <v-row v-if="boughtCoursesList.length == 0">
+    <v-row v-if="testList.length == 0">
       <v-col
         cols="12"
         style="font-size: 20px; text-align: center; line-height: 100%;"
       >
-        您还未选购任何课程哦！
+        您还没有任何测试!
       </v-col>
     </v-row>
     <v-row>
-      <course-item
-        cols="12"
-        md="4"
-        v-for="course in boughtCoursesList"
-        :key="course.id"
-        :courseName="course.name"
-        :courseId="course.id"
-        :description="course.intro"
-        :type="course.type"
-        :cost="course.cost"
-        :bought="course.bought"
-        :manageable="course.manageable"
-        :course-color="colorList[course.id % colorList.length]"
-        :course-likes="course.likes"
-        :liked="course.liked"
-        @set-like="setLikeOrDislike"
-      >
-      </course-item>
+      <test-item
+        v-for="test in testList"
+        :key="test.id"
+        :test-name="test.testName"
+        :test-id="test.id"
+        :end-time="test.endTime"
+        :start-time="test.startTime"
+        :test-state="test.state"
+        :test-length="test.length"
+        :course-name="test.courseName"
+      ></test-item>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import CourseItem from "@/components/CourseItem.vue";
-// import TestItem from "@/components/TestItem";
+// import CourseItem from "@/components/CourseItem.vue";
+import TestItem from "@/components/TestItem";
 import { getBoughtCourses, getCourseById } from "@/api/course";
 import { getTestByCourse } from "@/api/test";
 export default {
-  name: "MyCourse",
+  name: "MyTest",
   components: {
-    CourseItem
-    // TestItem
+    // CourseItem,
+    TestItem
   },
   data() {
     return {
